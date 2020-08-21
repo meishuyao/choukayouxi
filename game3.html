@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2048</title>
+    <style>
+        .title{
+            width: 200px;
+            height: 50px;
+            font-size: 20pt;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function endgame(){
+            if(!localStorage.point2048){
+                localStorage.point2048=0;
+            }
+            var point=Number(localStorage.point2048);
+            if(point>0){
+                localStorage.money=Number(localStorage.money)+point*10;
+            }
+            var d=new Date();
+            localStorage.game_time3=d.getTime();
+            window.location.href="rest.html";
+        }
+    </script>
+</head>
+<body>
+    <script>
+        if(!localStorage.game_time3){
+            localStorage.game_time3=0;
+        }
+        var d=new Date();
+        if(d.getTime()-localStorage.game_time3<300000){
+            window.location.href="rest.html";
+        }
+    </script>
+    <div class="title">小游戏3：2048</div>
+    <iframe src="game3s.html" frameborder="0" style="height: 200px; width: 200px;"></iframe>
+    <br>
+    <input type="button" value="结束游戏" onclick="endgame()"/>
+</body>
+</html>

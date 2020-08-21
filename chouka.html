@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<head>
+    <title>抽卡</title>
+    <style>
+        .interface{
+            height: 720px;
+            width: 480px;
+            border: 2px solid black;
+        }
+        .card{
+            margin: auto;
+            height: 450px;
+            width: 300px;
+            border: 1px solid black;
+        }
+        .button{
+            text-align: center;
+            background-color: lightgray;
+            border: 1px outset;
+            width: 50px;
+            margin: auto;
+        }
+        a{
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+<body>
+    <script>
+        //localStorage.cards=JSON.stringify(new Array());
+        var money=Number(localStorage.money);
+        var vcards=JSON.parse(localStorage.cards);
+        function sleep(numberMillis){
+            var now = new Date(); 
+            var exitTime = now.getTime() + numberMillis; 
+            while (true) { 
+                now = new Date(); 
+                if (now.getTime() > exitTime) 
+                return;
+            }
+        }
+        function once() {
+            if(money<1000){
+                alert("没有足够的银元了");
+                return;
+            }
+            money-=1000;
+            localStorage.money=money;
+            document.getElementById("money").innerHTML=money;
+            var type=Math.random();
+            var name=Math.floor(Math.random()*12)+1;
+            if (type<0.03) {
+                var r=document.getElementById("r");
+                r.innerHTML="SSR";
+                r.style.color="lightblue";
+            } else if(type<0.15){
+                name+=12;
+                var r=document.getElementById("r");
+                r.style.color="gold";
+                r.innerHTML="SR";
+            }
+            else if(type<0.4){
+                var r=document.getElementById("r");
+                r.style.color="silver";
+                r.innerHTML="R";
+                name+=24;
+            }
+            else{
+                var r=document.getElementById("r");
+                r.innerHTML="什么都没抽到，好气哦。";
+                r.style.color="black";
+                name=37;
+            }
+            vcards.push(name);
+            localStorage.cards=JSON.stringify(vcards);
+            document.getElementById("cardshow").src="img/"+name+".JPG";
+        }
+        var loop;
+        function loops(){
+            once();
+            loop--;
+            if(loop>0){
+                setTimeout(loops,1000);
+            }
+        }
+        function ten() {
+            if(money<10000){
+                alert("没有足够的银元了");
+                return;
+            }
+            loop=10;
+            loops(loop);
+            for (let index = 0; index < 10; index++) {
+                if(vcards[vcards.length-1-index]<=24){
+                    return;
+                }
+            }
+            while (vcards[vcards.length-1]>24) {
+                vcards.pop();
+                money+=1000;
+                once();
+            }
+        }
+    </script>
+    <div class="interface">
+        <div>
+            <img src="img/money.JPG" alt="money" style="height: 25px; float: left;">
+            <div id="money" style="font-size: 20px; float: left;"></div>
+            <script>
+                document.getElementById("money").innerHTML=money;
+            </script>
+            <br><br>
+        </div>
+        <div id="r" style="text-align: center;font-size: 25pt;"><br></div>
+        <div class="card">
+            <img id="cardshow" src="img/0.jpg" alt="人物" style="width: 100%; height: 100%;">
+        </div>
+        <br>
+        <div style="text-align: center;">
+        <input type="button" value="单抽" onclick="once()"/> <input type="button" value="十连" onclick="ten()"/>
+        </div>
+        <br>
+        <div class="button">
+            <a href="main.html">返回</a>
+        </div>    
+    </div>
+</body>
+</html>
